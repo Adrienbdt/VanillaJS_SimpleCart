@@ -1,6 +1,8 @@
 let carts = document.querySelectorAll(".add-cart");
 const productsClass = document.querySelector(".products");
 
+const productClass = document.querySelectorAll(".product");
+
 let products = [
   {
     name: "White Shirt",
@@ -132,12 +134,16 @@ function totalCost(product) {
 const displayCheckout = () => {
   let detailsTotal = JSON.parse(localStorage.getItem("totalCost"));
   let detailsCart = JSON.parse(localStorage.getItem("productsInCart"));
-  console.log(detailsTotal);
-  console.log(detailsCart);
+  // console.log(detailsTotal);
+  // console.log(detailsCart);
+  // console.log(JSON.stringify(detailsCart));
+  // console.dir(detailsCart);
 
   // if theres a local storage with our items && the div does exist on the page we 're on :
   if (detailsCart && productsClass) {
     productsClass.innerHTML = "";
+
+    // 1- We map the object first
     Object.values(detailsCart).map((item) => {
       productsClass.innerHTML += `
       <div class="product">
@@ -147,7 +153,9 @@ const displayCheckout = () => {
       </div>
       <div class="price">$${item.price}</div>
       <div class="quantity">
-        <ion-icon class="decrease" name="caret-back-circle-outline"></ion-icon>
+        <ion-icon class="decrease" name="caret-back-circle-outline" data-name="${
+          item.tag
+        }""></ion-icon>
         <span>${item.inCart}</span>
         <ion-icon class="increase" name="caret-forward-circle-outline"></ion-icon>
       </div>
@@ -155,6 +163,15 @@ const displayCheckout = () => {
       ${item.inCart * item.price},00 
       </div>
       `;
+
+      // 2 - then we can apply Object.keys()
+
+      // Object.keys(item).forEach(function () {
+      //   var obj = item;
+      //   console.log(obj.inCart, obj.price);
+      // });
+
+      // ----------------------- end of mapping
     });
     productsClass.innerHTML += `
     <div class="basketTotalContainer">
@@ -166,8 +183,62 @@ const displayCheckout = () => {
       </h4>
     </div>
     `;
+
+    if (productClass) {
+      const removeBtn = document.querySelectorAll(".decrease");
+
+      // console.log(`product class is now true`);
+      const clickBtnMinus = function () {
+        removeBtn.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            // console.log(btn);
+            const btnObjectContained = btn.dataset;
+            // console.log(btnObjectContained.name);
+            for (const prop in detailsCart) {
+              let name = prop.name;
+              // console.log(detailsCart[prop].inCart);
+              if (btnObjectContained.name == prop) {
+                console.log(`We have the same tag`);
+                console.log(detailsCart[prop].inCart);
+                let newQty = +detailsCart[prop].inCart - 1;
+                detailsCart[prop].inCart = newQty;
+                console.log(newQty);
+              } else {
+                console.log(`we don't have the same tag`);
+              }
+            }
+
+            // return btnObjectContained.name;
+          });
+        });
+      };
+
+      clickBtnMinus();
+    }
+
+    // REMOVE <- BUTTON
+
+    // Function returns the object when we click on the - button
+
+    // Remove an article
+
+    // Object.values(detailsCart).map((item) => {
+    //   removeBtn.forEach(function (btn) {
+    //     btn.addEventListener("click", function () {
+    //       console.log(this.btn.dataset);
+    //     });
+    //   });
+    // });
+    // remove item event listener
+    // });
   }
 };
+
+// const removeItem = function (item) {
+//   for (let value of item) {
+//     console.log(value);
+//   }
+// };
 
 // On load, cart checks into local storage to give the right number (top right)
 onLoadCartNumbers();
@@ -182,3 +253,57 @@ displayCheckout();
 //   containerMovements.insertAdjacentHTML('afterbegin', html); //methods accepts 2 strings for arguments, position and string for the element to be insterted ... see mdn for more info
 // });
 // };
+
+// var myObj = {
+//   _id: "591327ea6325162512438858",
+//   orderCart: {
+//     totalPrice: 66.95,
+//     totalQty: 5,
+//     items: {
+//       "5900e2e1e2e75276ca68e10c": {
+//         item: [Object],
+//         qty: 2,
+//         price: 25.98,
+//       },
+//       "5900d8fde2e75276ca68e107": {
+//         item: [Object],
+//         qty: 2,
+//         price: 25.98,
+//       },
+//       "58fff1d322f00e71fdbfe422": {
+//         item: [Object],
+//         qty: 2,
+//         price: 25.98,
+//       },
+//     },
+//   },
+//   orderEmail: "email@gmail.com",
+//   orderFullName: "John Doe",
+// };
+
+// console.log("--------- for...in -----------");
+// for (var key in myObj.orderCart.items) {
+//   var obj = myObj.orderCart.items[key];
+//   console.log(obj.qty, obj.price);
+// }
+
+// console.log("---- Object.keys() ----");
+// Object.keys(myObj.orderCart.items).forEach(function (key) {
+//   var obj = myObj.orderCart.items[key];
+//   console.log(obj.qty, obj.price);
+// });
+
+//--------------------------------------------------------------------//
+// var cartItems = {
+//   whiteShirt: {
+//     name: "White Shirt",
+//     tag: "whiteShirt",
+//     price: 20,
+//     inCart: 1,
+//   },
+// };
+
+// Object.keys(cartItems.whiteShirt).forEach(function () {
+//   var obj = cartItems.whiteShirt;
+//   console.log(obj.name, obj.price);
+// });
