@@ -200,7 +200,7 @@ const displayCheckout = () => {
               if (btnObjectContained.name == prop) {
                 console.log(`We have the same tag`);
                 console.log(detailsCart[prop].inCart);
-                let newQty = +detailsCart[prop].inC art - 1;
+                let newQty = +detailsCart[prop].inCart - 1;
                 detailsCart[prop].inCart = newQty;
                 console.log(newQty);
               } else {
